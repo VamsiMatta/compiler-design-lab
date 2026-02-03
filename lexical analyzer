@@ -1,7 +1,67 @@
-#include<stdio.h>
-int main(){
-int a,b,c;
-scanf("%d%d",&a&b);
-printf("c=%d",c);
-return0;
-}
+import string
+
+# List of keywords
+KEYWORDS = {"int", "if", "else", "while", "return"}
+
+# Operators and separators
+OPERATORS = {"+", "-", "*", "/", "="}
+SEPARATORS = {";", ",", "(", ")", "{", "}"}
+
+
+def lexical_analyzer(code):
+    tokens = []
+    i = 0
+
+    while i < len(code):
+        # Skip whitespace
+        if code[i].isspace():
+            i += 1
+            continue
+
+        # Identifier or Keyword
+        if code[i].isalpha():
+            start = i
+            while i < len(code) and code[i].isalnum():
+                i += 1
+            word = code[start:i]
+
+            if word in KEYWORDS:
+                tokens.append(("KEYWORD", word))
+            else:
+                tokens.append(("IDENTIFIER", word))
+
+        # Number
+        elif code[i].isdigit():
+            start = i
+            while i < len(code) and code[i].isdigit():
+                i += 1
+            tokens.append(("NUMBER", code[start:i]))
+
+        # Operator
+        elif code[i] in OPERATORS:
+            tokens.append(("OPERATOR", code[i]))
+            i += 1
+
+        # Separator
+        elif code[i] in SEPARATORS:
+            tokens.append(("SEPARATOR", code[i]))
+            i += 1
+
+        # Unknown character
+        else:
+            tokens.append(("UNKNOWN", code[i]))
+            i += 1
+
+    return tokens
+
+
+# Example input
+source_code = "int a = 10;"
+
+# Run lexical analyzer
+result = lexical_analyzer(source_code)
+
+# Print tokens
+for token in result:
+    print(token)
+
